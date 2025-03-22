@@ -14,17 +14,24 @@ function AddExperience() {
     linkedinProfile: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const experiences = JSON.parse(localStorage.getItem('experiences') || '[]');
-    const newExperience = {
-      id: Date.now(),
-      ...formData,
-      date: new Date().toISOString()
-    };
-    experiences.push(newExperience);
-    localStorage.setItem('experiences', JSON.stringify(experiences));
-    navigate('/experiences');
+    const response = await fetch('http://localhost:5000/api/experiences', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    if (response.ok) {
+      navigate('/experiences');
+      return;
+    }
+    const newExperience = await response.json().catch(err => {
+        console.error('Error parsing JSON:', err);
+        return null; // Handle the case where JSON parsing fails
+    });
+    // Optionally handle the newExperience if needed
   };
 
   const handleChange = (e) => {

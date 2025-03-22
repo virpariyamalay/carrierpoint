@@ -1,17 +1,45 @@
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { format } from 'date-fns'; // Ensure date-fns is imported for formatting dates
 import { Link } from 'react-router-dom';
 
 function ExperienceList() {
   const [experiences, setExperiences] = useState([]);
   const [filter, setFilter] = useState('');
+  const [loading, setLoading] = useState(true); // State for loading
+  const [error, setError] = useState(null); // State for error handling
 
   useEffect(() => {
-    const storedExperiences = JSON.parse(localStorage.getItem('experiences') || '[]');
-    setExperiences(storedExperiences);
+    const fetchExperiences = async () => {
+        const response = await fetch('/api/experiences');
+        if (response.ok) {
+            const data = await response.json();
+            setExperiences(data);
+        } else {
+            console.error('Failed to fetch experiences');
+        }
+    };
+    fetchExperiences();
   }, []);
 
-  const filteredExperiences = experiences.filter(exp =>
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/experiences');
+        if (!response.ok) {
+          throw new Error('Failed to fetch experiences');
+        }
+        const data = await response.json();
+        setExperiences(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchExperiences();
+  }, []);
+
+  const filteredExperiences = experiences.filter(exp => 
     exp.company.toLowerCase().includes(filter.toLowerCase()) ||
     exp.university.toLowerCase().includes(filter.toLowerCase())
   );

@@ -8,7 +8,6 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-
 app.use(cors()); // Enable CORS for all routes
 const PORT = process.env.PORT || 5000; 
 
@@ -24,6 +23,21 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
+
+// Experience schema
+const experienceSchema = new mongoose.Schema({
+  university: { type: String, required: true },
+  company: { type: String, required: true },
+  role: { type: String, required: true },
+  experience: { type: String, required: true },
+  preparation: { type: String, required: true },
+  tips: { type: String, required: true },
+  rating: { type: Number, required: true },
+  linkedinProfile: { type: String, required: true },
+  date: { type: Date, default: Date.now }
+});
+
+const Experience = mongoose.model('Experience', experienceSchema);
 
 // Signup endpoint
 app.post('/api/signup', async (req, res) => {
@@ -63,6 +77,29 @@ app.post('/api/login', async (req, res) => {
     res.status(200).json({ message: 'Login successful' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// API endpoint to save experience data
+app.post('/api/experiences', async (req, res) => {
+  const experienceData = req.body;
+
+  try {
+    const newExperience = new Experience(experienceData);
+    await newExperience.save();
+    res.status(201).json(newExperience);
+  } catch (error) {
+    res.status(500).json({ message: 'Error saving experience', error: error.message });
+  }
+});
+
+// API endpoint to retrieve all experiences
+app.get('/api/experiences', async (req, res) => {
+  try {
+    const experiences = await Experience.find();
+    res.status(200).json(experiences);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving experiences', error: error.message });
   }
 });
 
