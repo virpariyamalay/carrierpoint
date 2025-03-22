@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
 
 function Signup() {
@@ -30,14 +29,20 @@ function Signup() {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
+      const response = await fetch('http://localhost:5000/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email, password: formData.password }),
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
 
       toast.success('Successfully signed up! Please check your email for verification.');
+      navigate('/login');
       navigate('/login');
     } catch (error) {
       toast.error(error.message);

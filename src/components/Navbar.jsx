@@ -1,7 +1,61 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
+
+// function Navbar() {
+//   const location = useLocation();
+//   const [user, setUser] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     fetch('/api/session')
+//       .then(response => response.json())
+//       .then(data => {
+//         setUser(data.user ?? null);
+//         setLoading(false);
+//       });
+
+//     const handleAuthChange = () => {
+//       fetch('/api/session')
+//         .then(response => response.json())
+//         .then(data => {
+//           setUser(data.user ?? null);
+//         });
+//     };
+
+
+// function Navbar() {
+//   const location = useLocation();
+//   const [user, setUser] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     return () => {
+//       // Cleanup logic if needed
+//     };
+
+//     // return () => subscription.unsubscribe();
+//   }, []);
+
+//   const handleSignOut = async () => {
+//     try {
+//       const response = await fetch('/api/logout', {
+//         method: 'POST',
+//       });
+//       if (!response.ok) {
+//         const error = await response.json();
+//         throw new Error(error.message);
+//       }
+//       if (error) throw error;
+//       toast.success('Successfully signed out!');
+//     } catch (error) {
+//       toast.error(error.message);
+//     }
+//   };
+
+//   const isActive = (path) => {
+//     return location.pathname === path ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-700 hover:text-white';
+//   };
 
 function Navbar() {
   const location = useLocation();
@@ -9,31 +63,40 @@ function Navbar() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
+    fetch('/api/session')
+      .then(response => response.json())
+      .then(data => {
+        setUser(data.user ?? null);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching session:', error);
+        setLoading(false);
+      });
   }, []);
 
   const handleSignOut = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      const response = await fetch('/api/logout', { method: 'POST' });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+
+      setUser(null);
       toast.success('Successfully signed out!');
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to sign out.');
     }
   };
 
   const isActive = (path) => {
-    return location.pathname === path ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-700 hover:text-white';
+    return location.pathname === path
+      ? 'bg-blue-700 text-white'
+      : 'text-blue-100 hover:bg-blue-700 hover:text-white';
   };
+
 
   return (
     <nav className="bg-blue-600 shadow-lg sticky top-0 z-50">
