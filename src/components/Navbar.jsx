@@ -126,20 +126,23 @@ function Navbar() {
                 Experiences
               </Link>
               <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <div className="py-1">
-                  <Link
-                    to="/experiences"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    View Experiences
-                  </Link>
-                  <Link
-                    to="/add-experience"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Share Experience
-                  </Link>
-                </div>
+              <div className="relative group">
+  <div className="absolute left-0 mt-2 w-52 bg-white/80 backdrop-blur-lg shadow-lg rounded-xl overflow-hidden transform transition-all duration-300 ease-in-out scale-95 opacity-0 group-hover:opacity-100 group-hover:scale-100">
+    <Link
+      to="/experiences"
+      className="block px-4 py-3 text-sm font-medium text-gray-700 transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white"
+    >
+      View Experiences
+    </Link>
+    <Link
+      to="/add-experience"
+      className="block px-4 py-3 text-sm font-medium text-gray-700 transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white"
+    >
+      Share Experience
+    </Link>
+  </div>
+</div>
+
               </div>
             </div>
             <Link
@@ -156,20 +159,23 @@ function Navbar() {
                 PreGuide
               </Link>
               <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <div className="py-1">
-                  <Link
-                    to="/preguide"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    View Guides
-                  </Link>
-                  <Link
-                    to="/add-preguide"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Add New Guide
-                  </Link>
-                </div>
+              <div className="relative">
+  <div className="absolute left-0 mt-2 w-52 bg-white/80 backdrop-blur-lg shadow-lg rounded-xl overflow-hidden transform transition-all duration-300 ease-in-out scale-95 opacity-0 group-hover:opacity-100 group-hover:scale-100">
+    <Link
+      to="/preguide"
+      className="block px-4 py-3 text-sm font-medium text-gray-700 transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white"
+    >
+      View Guides
+    </Link>
+    <Link
+      to="/add-preguide"
+      className="block px-4 py-3 text-sm font-medium text-gray-700 transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white"
+    >
+      Add New Guide
+    </Link>
+  </div>
+</div>
+
               </div>
             </div>
             {!loading && (
