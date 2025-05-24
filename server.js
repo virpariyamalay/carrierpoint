@@ -2,14 +2,16 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import cors from 'cors'; // Import CORS middleware
+import cors from 'cors';
+import authRoutes from "./routes/auth.js";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // Enable CORS for all routes
-const PORT = process.env.PORT || 5000; 
+app.use(cors());
+
+const PORT = process.env.PORT || 5000;
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -103,7 +105,10 @@ app.get('/api/experiences', async (req, res) => {
   }
 });
 
-// Start the server
+// Use authentication routes
+app.use("/api/auth", authRoutes);
+
+// Start the server (Keep only ONE app.listen)
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
